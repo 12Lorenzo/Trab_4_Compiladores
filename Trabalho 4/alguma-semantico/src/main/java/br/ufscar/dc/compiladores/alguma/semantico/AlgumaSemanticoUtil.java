@@ -26,7 +26,7 @@ public class AlgumaSemanticoUtil {
         errosSemanticos.add(String.format("Linha %d: %s", linha, mensagem));
     }
     
-    //verifica tipo de uma expressao, todos os termos devem ser do mesmo tipo
+    //verifica o tipo de uma expressao, os termos devem ser do mesmo tipo
     public static TabelaSimbolos.TipoAlguma verificarTipo(Escopo escopos, AlgumaParser.ExpressaoContext ctx) {
         //System.out.println("Entrei na verificarTipo");
         TabelaSimbolos.TipoAlguma ret = null;
@@ -41,7 +41,7 @@ public class AlgumaSemanticoUtil {
         return ret;
     }
 
-    //verifica tipo de um termo logico, todos os fatores devem ser do mesmo tipo
+    //verifica o tipo de um termo logico, os fatores devem ser do mesmo tipo
     public static TabelaSimbolos.TipoAlguma verificarTipo(Escopo escopos, AlgumaParser.Termo_logicoContext ctx) {//
         //System.out.println("Entrei na verificarTipo");
         TabelaSimbolos.TipoAlguma ret = null;
@@ -76,7 +76,7 @@ public class AlgumaSemanticoUtil {
         return ret;
     }
 
-    //verifica o tipo da expressao relacional, que é constituida por expressoes aritmeticas
+    //verifica o tipo da expressao relacional, que é constituida por expressoes aritmeticas.
     public static TabelaSimbolos.TipoAlguma verificarTipo(Escopo escopos, AlgumaParser.Exp_relacionalContext ctx) {
         //System.out.println("Entrei na verificarTipo");
         TabelaSimbolos.TipoAlguma ret = null;
@@ -102,7 +102,7 @@ public class AlgumaSemanticoUtil {
         return ret;
     }
 
-    //verifica expressao aritmetica, verificando cada termo se são compativeis (mesmo tipo)
+    //verifica a expressão aritmetica, verificando cada termo se são compativeis
     public static TabelaSimbolos.TipoAlguma verificarTipo(Escopo escopos, AlgumaParser.Exp_aritmeticaContext ctx) {
         //System.out.println("Entrei na verificarTipo");
         TabelaSimbolos.TipoAlguma ret = null;
