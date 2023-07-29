@@ -17,25 +17,24 @@ public class MyCustomErrorListener implements ANTLRErrorListener {
        this.pw = pw;    
    }
 
-    @Override
-    public void	reportAmbiguity(Parser recognizer, DFA dfa, int startIndex, int stopIndex, boolean exact, BitSet ambigAlts, ATNConfigSet configs) {
-       
-    }
-    
-    @Override
-    public void reportAttemptingFullContext(Parser recognizer, DFA dfa, int startIndex, int stopIndex, BitSet conflictingAlts, ATNConfigSet configs) {
-        
+   public void reportAmbiguity(Parser arg0, DFA arg1, int arg2, int arg3, boolean arg4, BitSet arg5, ATNConfigSet arg6) {
+
     }
 
-    @Override
-    public void reportContextSensitivity(Parser recognizer, DFA dfa, int startIndex, int stopIndex, int prediction, ATNConfigSet configs) {
-        
+    public void reportAttemptingFullContext(Parser arg0, DFA arg1, int arg2, int arg3, BitSet arg4, ATNConfigSet arg5) {
+   
+
+    }
+
+    public void reportContextSensitivity(Parser arg0, DFA arg1, int arg2, int arg3, int arg4, ATNConfigSet arg5) {
+    
+
     }
 
     @Override
     public void	syntaxError(Recognizer<?, ?> arg0, Object arg1, int arg2, int arg3, String arg4, RecognitionException arg5) {
         // Colocar o tratamento de erro customizado
-
+        System.out.println("Entrei na syntaxError");
         Token t = (Token) arg1;
         String text = t.getText();
         // o texto de EOF vem com <>, portanto aqui realiza uma conversão em tal caso

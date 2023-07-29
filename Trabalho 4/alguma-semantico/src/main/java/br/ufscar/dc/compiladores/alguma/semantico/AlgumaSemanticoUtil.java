@@ -20,12 +20,15 @@ public class AlgumaSemanticoUtil {
     public static List<String> errosSemanticos = new ArrayList<>();
     
     public static void adicionarErroSemantico(Token t, String mensagem) {
+        //System.out.println("Entrei na adicionarErroSemantico");
         int linha = t.getLine();
-        int coluna = t.getCharPositionInLine();
+        //int coluna = t.getCharPositionInLine();
         errosSemanticos.add(String.format("Linha %d: %s", linha, mensagem));
     }
     
+    //verifica tipo de uma expressao, todos os termos devem ser do mesmo tipo
     public static TabelaSimbolos.TipoAlguma verificarTipo(Escopo escopos, AlgumaParser.ExpressaoContext ctx) {
+        //System.out.println("Entrei na verificarTipo");
         TabelaSimbolos.TipoAlguma ret = null;
         for (Termo_logicoContext ta : ctx.termo_logico()) {
             TabelaSimbolos.TipoAlguma aux = verificarTipo(escopos, ta);
@@ -38,7 +41,9 @@ public class AlgumaSemanticoUtil {
         return ret;
     }
 
-    public static TabelaSimbolos.TipoAlguma verificarTipo(Escopo escopos, AlgumaParser.Termo_logicoContext ctx) {
+    //verifica tipo de um termo logico, todos os fatores devem ser do mesmo tipo
+    public static TabelaSimbolos.TipoAlguma verificarTipo(Escopo escopos, AlgumaParser.Termo_logicoContext ctx) {//
+        //System.out.println("Entrei na verificarTipo");
         TabelaSimbolos.TipoAlguma ret = null;
         for (Fator_logicoContext ta : ctx.fator_logico()) {
             TabelaSimbolos.TipoAlguma aux = verificarTipo(escopos, ta);
@@ -52,7 +57,9 @@ public class AlgumaSemanticoUtil {
         return ret;
     }
 
+    //para verificar um fator, como ele e constituido por uma parcela, ele simplesmente verifica esta.
     public static TabelaSimbolos.TipoAlguma verificarTipo(Escopo escopos, AlgumaParser.Fator_logicoContext ctx) {
+        //System.out.println("Entrei na verificarTipo");
         //SemanticoUtils.adicionarErroSemantico(ctx.start, ctx.getText() + verificarTipo(escopos, ctx.parcela_logica()));
         return verificarTipo(escopos, ctx.parcela_logica());
     }
@@ -65,17 +72,19 @@ public class AlgumaSemanticoUtil {
             ret = TabelaSimbolos.TipoAlguma.LOGICO;
         }
 
-        
+
         return ret;
     }
 
+    //verifica o tipo da expressao relacional, que é constituida por expressoes aritmeticas
     public static TabelaSimbolos.TipoAlguma verificarTipo(Escopo escopos, AlgumaParser.Exp_relacionalContext ctx) {
+        //System.out.println("Entrei na verificarTipo");
         TabelaSimbolos.TipoAlguma ret = null;
         if(ctx.op_relacional() != null){
             for (Exp_aritmeticaContext ta : ctx.exp_aritmetica()) {
                 TabelaSimbolos.TipoAlguma aux = verificarTipo(escopos, ta);
-                Boolean auxNumeric = aux == TabelaSimbolos.TipoAlguma.REAL || aux == TabelaSimbolos.TipoAlguma.INTEIRO;
-                Boolean retNumeric = ret == TabelaSimbolos.TipoAlguma.REAL || ret == TabelaSimbolos.TipoAlguma.INTEIRO;
+                Boolean auxNumeric = aux == TabelaSimbolos.TipoAlguma.REAL || aux == TabelaSimbolos.TipoAlguma.INT; //casos numericos inteiros e reais se correlacionam
+                Boolean retNumeric = ret == TabelaSimbolos.TipoAlguma.REAL || ret == TabelaSimbolos.TipoAlguma.INT;
                 if (ret == null) {
                     ret = aux;
                 } else if (!(auxNumeric && retNumeric) && aux != ret) {
@@ -89,11 +98,13 @@ public class AlgumaSemanticoUtil {
             ret = verificarTipo(escopos, ctx.exp_aritmetica(0));
         }
 
-        
+
         return ret;
     }
 
+    //verifica expressao aritmetica, verificando cada termo se são compativeis (mesmo tipo)
     public static TabelaSimbolos.TipoAlguma verificarTipo(Escopo escopos, AlgumaParser.Exp_aritmeticaContext ctx) {
+        //System.out.println("Entrei na verificarTipo");
         TabelaSimbolos.TipoAlguma ret = null;
         for (TermoContext ta : ctx.termo()) {
             TabelaSimbolos.TipoAlguma aux = verificarTipo(escopos, ta);
@@ -104,27 +115,32 @@ public class AlgumaSemanticoUtil {
             }
         }
 
-        
+
         return ret;
     }
 
+    //verifica um termo, composto por fatores que devem ser compativeis.
     public static TabelaSimbolos.TipoAlguma verificarTipo(Escopo escopos, AlgumaParser.TermoContext ctx) {
+        //System.out.println("Entrei na verificarTipo");
         TabelaSimbolos.TipoAlguma ret = null;
 
         for (FatorContext fa : ctx.fator()) {
             TabelaSimbolos.TipoAlguma aux = verificarTipo(escopos, fa);
-            Boolean auxNumeric = aux == TabelaSimbolos.TipoAlguma.REAL || aux == TabelaSimbolos.TipoAlguma.INTEIRO;
-            Boolean retNumeric = ret == TabelaSimbolos.TipoAlguma.REAL || ret == TabelaSimbolos.TipoAlguma.INTEIRO;
+            Boolean auxNumeric = aux == TabelaSimbolos.TipoAlguma.REAL || aux == TabelaSimbolos.TipoAlguma.INT; //casos numericos inteiros e reais se correlacionam
+            Boolean retNumeric = ret == TabelaSimbolos.TipoAlguma.REAL || ret == TabelaSimbolos.TipoAlguma.INT;
             if (ret == null) {
                 ret = aux;
             } else if (!(auxNumeric && retNumeric) && aux != ret) {
                 ret = TabelaSimbolos.TipoAlguma.INVALIDO;
             }
         }
-        
+
         return ret;
     }
+
+    //para cada fator devemos verificar se as parcelas que os compoem são compativeis.
     public static TabelaSimbolos.TipoAlguma verificarTipo(Escopo escopos, AlgumaParser.FatorContext ctx) {
+        //System.out.println("Entrei na verificarTipo");
         TabelaSimbolos.TipoAlguma ret = null;
 
         for (ParcelaContext fa : ctx.parcela()) {
@@ -135,30 +151,39 @@ public class AlgumaSemanticoUtil {
                 ret = TabelaSimbolos.TipoAlguma.INVALIDO;
             }
         }
-        
+
         return ret;
     }
+
+    //para caso de parcelas vamos verificar dependendo de seu tipo, pode ser unaria ou nao, um if para verificar o tipo em cada
+    //caso foi utilizado.
     public static TabelaSimbolos.TipoAlguma verificarTipo(Escopo escopos, AlgumaParser.ParcelaContext ctx) {
+        //System.out.println("Entrei na verificarTipo");
         TabelaSimbolos.TipoAlguma ret = TabelaSimbolos.TipoAlguma.INVALIDO;
 
         if(ctx.parcela_nao_unario() != null){
             ret = verificarTipo(escopos, ctx.parcela_nao_unario());
         }
         else {
-            
+
             ret = verificarTipo(escopos, ctx.parcela_unario());
         }
         return ret;
     }
 
+    //na parcela nao unaria, temos um identificador ou uma cadeia, no caso de identificador temos de verificar seu tipo
     public static TabelaSimbolos.TipoAlguma verificarTipo(Escopo escopos, AlgumaParser.Parcela_nao_unarioContext ctx) {
+        //System.out.println("Entrei na verificarTipo");
         if (ctx.identificador() != null) {
             return verificarTipo(escopos, ctx.identificador());
         }
-        return TabelaSimbolos.TipoAlguma.LITERAL;
+        return TabelaSimbolos.TipoAlguma.CADEIA;
     }
 
-    public static TabelaSimbolos.TipoAlguma verificarTipo(Escopo escopos, AlgumaParser.IdentificadorContext ctx) {//kk suspeitos
+    //para verificar um identificador, verificamos seu nome completo, composto por exemplo NOME1.NOME2.NOME...
+    //tendo o nome pronto, vemos se esse existe em algum escopo.
+    public static TabelaSimbolos.TipoAlguma verificarTipo(Escopo escopos, AlgumaParser.IdentificadorContext ctx) {
+        //System.out.println("Entrei na verificarTipo");
         String nomeVar = "";
         TabelaSimbolos.TipoAlguma ret = TabelaSimbolos.TipoAlguma.INVALIDO;
         for(int i = 0; i < ctx.IDENT().size(); i++){
@@ -172,13 +197,15 @@ public class AlgumaSemanticoUtil {
                 ret = verificarTipo(escopos, nomeVar);
             }
         }
-        System.out.println(nomeVar);
+
         return ret;
     }
     
+    //Para parcelas unarias, vemos qual seu tipo, ou seja o que esta escrito e o retornamos
     public static TabelaSimbolos.TipoAlguma verificarTipo(Escopo escopos, AlgumaParser.Parcela_unarioContext ctx) {
+        //System.out.println("Entrei na verificarTipo");
         if (ctx.NUM_INT() != null) {
-            return TabelaSimbolos.TipoAlguma.INTEIRO;
+            return TabelaSimbolos.TipoAlguma.INT;
         }
         if (ctx.NUM_REAL() != null) {
             return TabelaSimbolos.TipoAlguma.REAL;
@@ -187,17 +214,7 @@ public class AlgumaSemanticoUtil {
             return verificarTipo(escopos, ctx.identificador());
         }
         if (ctx.IDENT() != null) {
-            TabelaSimbolos.TipoAlguma ret = null;
-            ret = verificarTipo(escopos, ctx.IDENT().getText());
-            for (ExpressaoContext fa : ctx.expressao()) {
-                TabelaSimbolos.TipoAlguma aux = verificarTipo(escopos, fa);
-                if (ret == null) {
-                    ret = aux;
-                } else if (ret != aux && aux != TabelaSimbolos.TipoAlguma.INVALIDO) {
-                    ret = TabelaSimbolos.TipoAlguma.INVALIDO;
-                }
-            }
-            return ret;
+            return verificarTipo(escopos, ctx.IDENT().getText());
         } else {
             TabelaSimbolos.TipoAlguma ret = null;
             for (ExpressaoContext fa : ctx.expressao()) {
@@ -212,11 +229,16 @@ public class AlgumaSemanticoUtil {
         }
     }
     
+    //No caso de receber so uma string, vemos se ela existe, para descobrir se o nome da variavel foi criado ao ser utilizado.
     public static TabelaSimbolos.TipoAlguma verificarTipo(Escopo escopos, String nomeVar) {
-        TabelaSimbolos.TipoAlguma type = null;
+        //System.out.println("Entrei na verificarTipo");
+        TabelaSimbolos.TipoAlguma type = TabelaSimbolos.TipoAlguma.INVALIDO;
         for(TabelaSimbolos tabela : escopos.getPilha()){
-            type = tabela.verificar(nomeVar);
+            if(tabela.existe(nomeVar)){
+                return tabela.verificar(nomeVar);
+            }
         }
+
         return type;
     }
 
@@ -224,10 +246,10 @@ public class AlgumaSemanticoUtil {
         TabelaSimbolos.TipoAlguma tipo = null;
                 switch(val) {
                     case "literal": 
-                        tipo = TabelaSimbolos.TipoAlguma.LITERAL;
+                        tipo = TabelaSimbolos.TipoAlguma.CADEIA;
                         break;
                     case "inteiro": 
-                        tipo = TabelaSimbolos.TipoAlguma.INTEIRO;
+                        tipo = TabelaSimbolos.TipoAlguma.INT;
                         break;
                     case "real": 
                         tipo = TabelaSimbolos.TipoAlguma.REAL;

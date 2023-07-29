@@ -8,9 +8,9 @@ public class TabelaSimbolos {
 
     public enum TipoAlguma {
         //Tipo de variavel
-        INTEIRO,
+        INT,
         REAL,
-        LITERAL,
+        CADEIA,
         LOGICO,
         INVALIDO,
         REG,
@@ -18,6 +18,7 @@ public class TabelaSimbolos {
     }
 
     public enum Estrutura{
+        //Estruturas
         VAR, 
         CONST, 
         PROC, 
@@ -28,7 +29,7 @@ public class TabelaSimbolos {
     class EntradaTabelaDeSimbolos {
         private String nome;
         private TipoAlguma tipo;
-        private Estrutura estrut;
+        Estrutura estrut;
 
         public EntradaTabelaDeSimbolos(String nome, TipoAlguma tipo, Estrutura estrut) {
             this.nome = nome;

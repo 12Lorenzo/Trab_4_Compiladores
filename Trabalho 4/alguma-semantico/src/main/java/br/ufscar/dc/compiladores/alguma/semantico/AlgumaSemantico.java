@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-import br.ufscar.dc.compiladores.alguma.semantico.AlgumaBaseListener;
+
 import br.ufscar.dc.compiladores.alguma.semantico.TabelaSimbolos.EntradaTabelaDeSimbolos;
-import br.ufscar.dc.compiladores.alguma.semantico.TabelaSimbolos.TipoAlguma;
+
 
 import br.ufscar.dc.compiladores.alguma.semantico.AlgumaParser.CmdAtribuicaoContext;
 import br.ufscar.dc.compiladores.alguma.semantico.AlgumaParser.CmdLeiaContext;
@@ -27,25 +27,28 @@ import br.ufscar.dc.compiladores.alguma.semantico.AlgumaParser.Parcela_unarioCon
 import br.ufscar.dc.compiladores.alguma.semantico.AlgumaParser;
 
 public class AlgumaSemantico extends AlgumaBaseVisitor{
-    TabelaSimbolos tabela;
+    //TabelaSimbolos tabela;
     Escopo escopos = new Escopo(TabelaSimbolos.TipoAlguma.VOID);
 
     @Override
     public Object visitPrograma(ProgramaContext ctx) {
+        System.out.println("Entrei na visitPrograma");
         return super.visitPrograma(ctx);
     }
-
+    
     @Override
     public Object visitDeclaracao_constante(Declaracao_constanteContext ctx) {
+        System.out.println("Entrei na visitDeclaracao_constante");
         TabelaSimbolos escopoAtual = escopos.getEscopo();
         if (escopoAtual.existe(ctx.IDENT().getText())) {
             AlgumaSemanticoUtil.adicionarErroSemantico(ctx.start, "constante" + ctx.IDENT().getText()
                     + " ja declarado anteriormente");
         } else {
-            TabelaSimbolos.TipoAlguma tipo = TabelaSimbolos.TipoAlguma.INTEIRO;
+            TabelaSimbolos.TipoAlguma tipo = TabelaSimbolos.TipoAlguma.INT;
             TabelaSimbolos.TipoAlguma aux = AlgumaSemanticoUtil.getTipo(ctx.tipo_basico().getText()) ;
-            if(aux != null)
+            if(aux != null){
                 tipo = aux;
+            }
             escopoAtual.adicionar(ctx.IDENT().getText(), tipo, TabelaSimbolos.Estrutura.CONST);
         }
 
@@ -54,6 +57,7 @@ public class AlgumaSemantico extends AlgumaBaseVisitor{
 
     @Override
     public Object visitDeclaracao_tipo(Declaracao_tipoContext ctx) {
+        System.out.println("Entrei na visitDeclaracao_tipo");
         TabelaSimbolos escopoAtual = escopos.getEscopo();
         if (escopoAtual.existe(ctx.IDENT().getText())) {
              AlgumaSemanticoUtil.adicionarErroSemantico(ctx.start, "tipo " + ctx.IDENT().getText()
@@ -82,6 +86,7 @@ public class AlgumaSemantico extends AlgumaBaseVisitor{
                 for(TabelaSimbolos.EntradaTabelaDeSimbolos re : varReg){
                     String nameVar = ctx.IDENT().getText() + '.' + re.getNome();
                     if (escopoAtual.existe(nameVar)) {
+                        System.out.println("Entrei na visitDeclaracao_tipo");
                         AlgumaSemanticoUtil.adicionarErroSemantico(ctx.start, "identificador " + nameVar
                                 + " ja declarado anteriormente");
                     }
@@ -101,6 +106,7 @@ public class AlgumaSemantico extends AlgumaBaseVisitor{
 
     @Override
     public Object visitDeclaracao_variavel(Declaracao_variavelContext ctx) {
+        System.out.println("Entrei na visitDeclaracao_variavel");
         TabelaSimbolos escopoAtual = escopos.getEscopo();
         for (IdentificadorContext id : ctx.variavel().identificador()) {
             String nomeId = "";
@@ -169,7 +175,7 @@ public class AlgumaSemantico extends AlgumaBaseVisitor{
 
                     }
                     else{//tipo registro estendido
-                        escopoAtual.adicionar(id.getText(), TabelaSimbolos.TipoAlguma.INTEIRO, TabelaSimbolos.Estrutura.VAR);
+                        escopoAtual.adicionar(id.getText(), TabelaSimbolos.TipoAlguma.INT, TabelaSimbolos.Estrutura.VAR);
                     }
                 }
             }
@@ -179,6 +185,7 @@ public class AlgumaSemantico extends AlgumaBaseVisitor{
 
     @Override
     public Object visitDeclaracao_global(Declaracao_globalContext ctx) {
+        System.out.println("Entrei na visitDeclaracao_global");
         TabelaSimbolos escopoAtual = escopos.getEscopo();
         Object ret;
         if (escopoAtual.existe(ctx.IDENT().getText())) {
@@ -261,6 +268,7 @@ public class AlgumaSemantico extends AlgumaBaseVisitor{
 
     @Override
     public Object visitTipo_basico_ident(Tipo_basico_identContext ctx) {
+        System.out.println("Entrei na visitTipo_basico_ident");
         if(ctx.IDENT() != null){
             boolean exists = false;
             for(TabelaSimbolos escopo : escopos.getPilha()) {
@@ -278,6 +286,7 @@ public class AlgumaSemantico extends AlgumaBaseVisitor{
 
     @Override
     public Object visitIdentificador(IdentificadorContext ctx) {
+        System.out.println("Entrei na visitIdentificador");
         String nomeVar = "";
         int i = 0;
         for(TerminalNode id : ctx.IDENT()){
@@ -299,6 +308,7 @@ public class AlgumaSemantico extends AlgumaBaseVisitor{
 
     @Override
     public Object visitCmdAtribuicao(CmdAtribuicaoContext ctx) {
+        System.out.println("Entrei na visitCmdAtribuicao");
         TabelaSimbolos.TipoAlguma tipoExpressao = AlgumaSemanticoUtil.verificarTipo(escopos, ctx.expressao());
         boolean error = false;
         String pointerChar = ctx.getText().charAt(0) == '^' ? "^" : "";
@@ -315,8 +325,8 @@ public class AlgumaSemantico extends AlgumaBaseVisitor{
                 if (escopo.existe(nomeVar) && !found)  {
                     found = true;
                     TabelaSimbolos.TipoAlguma tipoVariavel = AlgumaSemanticoUtil.verificarTipo(escopos, nomeVar);
-                    Boolean varNumeric = tipoVariavel == TabelaSimbolos.TipoAlguma.REAL || tipoVariavel == TabelaSimbolos.TipoAlguma.INTEIRO;
-                    Boolean expNumeric = tipoExpressao == TabelaSimbolos.TipoAlguma.REAL || tipoExpressao == TabelaSimbolos.TipoAlguma.INTEIRO;
+                    Boolean varNumeric = tipoVariavel == TabelaSimbolos.TipoAlguma.REAL || tipoVariavel == TabelaSimbolos.TipoAlguma.INT;
+                    Boolean expNumeric = tipoExpressao == TabelaSimbolos.TipoAlguma.REAL || tipoExpressao == TabelaSimbolos.TipoAlguma.INT;
                     if  (!(varNumeric && expNumeric) && tipoVariavel != tipoExpressao && tipoExpressao != TabelaSimbolos.TipoAlguma.INVALIDO) {
                         error = true;
                     }
@@ -336,6 +346,7 @@ public class AlgumaSemantico extends AlgumaBaseVisitor{
 
     @Override
     public Object visitCmdRetorne(CmdRetorneContext ctx) {
+        System.out.println("Entrei na visitCmdRetorne");
         if(escopos.getEscopo().retorTipo == TabelaSimbolos.TipoAlguma.VOID){
             AlgumaSemanticoUtil.adicionarErroSemantico(ctx.start, "comando retorne nao permitido nesse escopo");
         } 
@@ -345,6 +356,7 @@ public class AlgumaSemantico extends AlgumaBaseVisitor{
     //para parcela unarios, verificamos se a variavel existe
     @Override
     public Object visitParcela_unario(Parcela_unarioContext ctx) {
+        System.out.println("Entrei na visitParcela_unario");
         TabelaSimbolos escopoAtual = escopos.getEscopo();
         if(ctx.IDENT() != null){
             String name = ctx.IDENT().getText();
@@ -362,6 +374,7 @@ public class AlgumaSemantico extends AlgumaBaseVisitor{
                 }
                 if(error){
                     AlgumaSemanticoUtil.adicionarErroSemantico(ctx.start, "incompatibilidade de parametros na chamada de " + name);
+                    
                 }
             }
         }

@@ -28,14 +28,10 @@
     <dependency>
       <groupId>org.antlr</groupId>
       <artifactId>antlr4</artifactId>
-      <version>4.11.1</version>
+      <version>4.13.0</version>
       <classifier>complete</classifier>
     </dependency>
-    <dependency>
-      <groupId>org.antlr</groupId>
-      <artifactId>antlr4-runtime</artifactId>
-      <version>4.11.1</version>
-    </dependency>
+    
   </dependencies>
 
   <build>
@@ -43,7 +39,7 @@
       <plugin>
           <groupId>org.antlr</groupId>
           <artifactId>antlr4-maven-plugin</artifactId>
-          <version>4.11.1</version>
+          <version>4.13.0</version>
           <configuration>
               <visitor>true</visitor>
           </configuration>

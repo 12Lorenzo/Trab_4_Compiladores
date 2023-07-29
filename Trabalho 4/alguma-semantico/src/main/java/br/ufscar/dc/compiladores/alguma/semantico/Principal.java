@@ -19,7 +19,8 @@ public class Principal {
             CommonTokenStream cs = new CommonTokenStream(lex); //conversão para token stream
             AlgumaParser parser = new AlgumaParser(cs);
             AlgumaParser.ProgramaContext arvore = parser.programa();   
-            AlgumaSemantico as = new AlgumaSemantico();  
+            AlgumaSemantico as = new AlgumaSemantico(); 
+            System.out.println("Entrei na main");
             as.visitPrograma(arvore);
             for(String err: AlgumaSemanticoUtil.errosSemanticos){
                 p.println(err);

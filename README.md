@@ -27,7 +27,7 @@ Para compilar e executar este programa, primeiro você deve entrar na pasta cham
 ```
 
 *Importante* <br>
-Talvez de um problema na compilação do alguma-semantico, caso isso aconteça digitar:
+Para os testes, utilizar no ARG2 o seguinte trecho:
 ```
-java -cp /caminho/alguma-semantico-1.0-SNAPSHOT-jar-with-dependencies.jar br.ufscar.dc.compiladores.alguma.semantico.Principal /caminho/entrada.txt /caminho/saida.txt
+"java -cp alguma-semantico-20.04-jar-with-dependencies.jar br.ufscar.dc.compiladores.alguma.semantico.Principal"
 ```
