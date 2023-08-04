@@ -22,7 +22,7 @@ Para compilar e executar este programa, primeiro você deve entrar na pasta cham
   mvn package
 ```
 ```
-  java -cp alguma-sintatico-20.04-jar-with-dependencies.jar br.ufscar.dc.compiladores.alguma.semantico.Principal /caminho/entrada.txt /caminho/saida.txt
+  java -cp alguma-semantico-20.04-jar-with-dependencies.jar br.ufscar.dc.compiladores.alguma.semantico.Principal /caminho/entrada.txt /caminho/saida.txt
 
 ```
 
